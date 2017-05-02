@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">WordFinder</string>
+    <string name="edit_message">Enter a message</string>
+    <string name="one">one</string>
+    <string name="two">two</string>
+
+</resources>
