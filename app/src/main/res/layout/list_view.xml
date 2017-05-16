@@ -3,10 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
+
 <EditText
     android:layout_width="150dp"
     android:layout_height="wrap_content"
-    android:inputType="textPersonName"
     android:hint="Type"
     android:ems="10"
     android:id="@+id/editText"
@@ -22,7 +22,8 @@
     android:enabled="true"
     android:focusableInTouchMode="true"
     android:focusable="true"
-    android:layout_weight="1"/>
+    android:layout_weight="1"
+    android:inputType="textFilter"/>
     <Button
         android:id="@+id/go_button"
         android:layout_width="40dp"
@@ -61,4 +62,5 @@
         android:layout_alignBottom="@+id/editText"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
 </RelativeLayout>

@@ -3,8 +3,10 @@ package com.example.sudaraje.firstapplication;
 import android.app.Activity;
 import android.app.LauncherActivity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -86,6 +88,9 @@ public class OneFragment extends Fragment{
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            listView.setNestedScrollingEnabled(true);
+        }
 
         return view;
 
@@ -96,7 +101,7 @@ public class OneFragment extends Fragment{
         public ArrayList<String> myItems = new ArrayList();
 
         public CustomAdapter() {
-            System.out.println("inside constructor default ::::::::");
+            //System.out.println("inside constructor default ::::::::");
             myItems.add("");
             notifyDataSetChanged();
         }
@@ -106,6 +111,7 @@ public class OneFragment extends Fragment{
         }
 
         public View getView(int position, View convertView, ViewGroup parent) {
+            final ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 convertView = inflater.inflate(R.layout.list_view, parent, false);
@@ -119,13 +125,13 @@ public class OneFragment extends Fragment{
                 editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                     public void onFocusChange(View v, boolean hasFocus) {
                         System.out.println("hasFocus ::: " + hasFocus+"");
-                        editText.setFocusable(true);
-                        editText.setFocusableInTouchMode(true);
-                        editText.requestFocus();
-                        if(!hasFocus) {
-                            editText.setFocusable(true);
-                            //saveThisItem(txtClientID.getText().toString(), "position", txtPosition.getText().toString());
-                        }
+//                        editText.setFocusable(true);
+//                        editText.setFocusableInTouchMode(true);
+//                        editText.requestFocus();
+//                        if(!hasFocus) {
+//                            editText.setFocusable(true);
+//                            //saveThisItem(txtClientID.getText().toString(), "position", txtPosition.getText().toString());
+//                        }
                     }
                 });
 
@@ -160,7 +166,6 @@ public class OneFragment extends Fragment{
                         if(s.length() == 4 && !check) {
                             goButton.setVisibility(View.VISIBLE);
                         }
-
                     }
                 });
 
@@ -219,9 +224,11 @@ public class OneFragment extends Fragment{
         }
     }
 
+
     public interface OnFragmentInteractionListener {
         public void onFragmentInteraction(String stringEntered);
     }
+
 
 
 }
