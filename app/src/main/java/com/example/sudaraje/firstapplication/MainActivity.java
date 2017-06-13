@@ -44,16 +44,20 @@ public class MainActivity extends AppCompatActivity implements OneFragment.OnFra
 
     @Override
     public void onFragmentInteraction(String stringEntered) {
-        //TwoFragment secondFragment = (TwoFragment)getSupportFragmentManager().findFragmentById(R.id.twoFragment);
-        TwoFragment secondFragment = new TwoFragment();
-        System.out.println("came inside onFragmentInteraction ::: " + stringEntered);
+
+        Fragment secondFragment = new TwoFragment();
         try {
-            //secondFragment.removeLetters(stringEntered);
+            android.app.FragmentManager fm = getFragmentManager();
+            android.app.FragmentTransaction ft = fm.beginTransaction();
             Bundle bundle = new Bundle();
             bundle.putString("txtToBeDeleted", stringEntered);
-            // set Fragmentclass Arguments
-            System.out.println("::::::::::: inside try ::::::::: " + stringEntered);
             secondFragment.setArguments(bundle);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .detach(secondFragment)
+                    .attach(secondFragment)
+                    .commit();
+            ft.commit();
         }
         catch(Exception e){
             e.printStackTrace();

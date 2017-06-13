@@ -11,13 +11,23 @@ import java.util.ArrayList;
 
 public class TextViewAdapter extends BaseAdapter {
     private Context context;
-    private String[] textViewValues;
+    private static char[] textViewValues = new char[]{'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+    private static ArrayList<Character> al=new ArrayList<Character>();
+    private static String textToDelete ;
 
 
-    public TextViewAdapter(Context context,String ch[]) {
+    public TextViewAdapter(Context context,String ch[],String txtToBeDeleted) {
         this.context = context;
         //ch = new char[]{'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
-        textViewValues = ch;
+        //textViewValues = ch;
+        if(al.size()==0) {
+            for(int i = 0; i < 26; i++) {
+                al.add(textViewValues[i]);
+            }
+        }
+        if(txtToBeDeleted != null) {
+            textToDelete = txtToBeDeleted.toUpperCase();
+        }
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -27,23 +37,33 @@ public class TextViewAdapter extends BaseAdapter {
 
         View gridView;
 
-        if (convertView == null) {
-
+//        if (convertView == null) {
             gridView = new View(context);
-            // get layout from mobile.xml
             gridView = inflater.inflate(R.layout.item, null);
-            // set value into textview
             TextView textView = (TextView) gridView.findViewById(R.id.grid_item_label);
-            textView.setText(textViewValues[position]);
-        } else {
-            gridView = convertView;
-        }
+            textView.setText(al.get(position).toString());
+            if(this.textToDelete != null) {
+                String strPresent = textView.getText().toString().toUpperCase();
+                for(char ch : strPresent.toCharArray()) {
+                    for(int i=0 ; i<4 ;i++)
+                        if(ch == textToDelete.charAt(i)) {
+                            int index = al.indexOf(ch);
+                            if(index != -1)
+                                al.set(index,' ');
+                            textView.setVisibility(View.GONE);
+                        }
+                }
+            }
+//        } else {
+//            parent.removeViewAt(23);
+//            gridView = convertView;
+//        }
         return gridView;
     }
 
     @Override
     public int getCount() {
-        return textViewValues.length;
+        return al.size();
     }
 
     @Override

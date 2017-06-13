@@ -1,15 +1,14 @@
 package com.example.sudaraje.firstapplication;
 
 import android.app.Activity;
-import android.app.LauncherActivity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +16,7 @@ import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -38,10 +35,9 @@ public class OneFragment extends Fragment{
     private int bulls,cows;
     private CustomAdapter myAdapter;
     private OnFragmentInteractionListener mListener;
-    //private int currentlyFocusedRow;
 
     public OneFragment() {
-        str = new String[]{"hike","mike","mole","mile","lite","peak","pear","mine","shut","nose","bike"};
+        str = new String[]{"hike","mike","mole","mile","lite","peak","pear","mine","shut","nose","bike","mild","lick","neat","vein","kith","nerd"};
         bulls=0;
         cows=0;
     }
@@ -54,9 +50,6 @@ public class OneFragment extends Fragment{
         ltrToFind = str[randomNo];
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
-
-
     }
     @Override
     public void onAttach(Context context) {
@@ -101,7 +94,6 @@ public class OneFragment extends Fragment{
         public ArrayList<String> myItems = new ArrayList();
 
         public CustomAdapter() {
-            //System.out.println("inside constructor default ::::::::");
             myItems.add("");
             notifyDataSetChanged();
         }
@@ -124,14 +116,6 @@ public class OneFragment extends Fragment{
 
                 editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                     public void onFocusChange(View v, boolean hasFocus) {
-                        System.out.println("hasFocus ::: " + hasFocus+"");
-//                        editText.setFocusable(true);
-//                        editText.setFocusableInTouchMode(true);
-//                        editText.requestFocus();
-//                        if(!hasFocus) {
-//                            editText.setFocusable(true);
-//                            //saveThisItem(txtClientID.getText().toString(), "position", txtPosition.getText().toString());
-//                        }
                     }
                 });
 
@@ -146,23 +130,17 @@ public class OneFragment extends Fragment{
 
                     public void onTextChanged(CharSequence s, int start,
                                               int before, int count) {
+
                         goButton.setVisibility(View.GONE);
-                        if(s.length()!=0) {
-                            prevSeq = s.subSequence(0, s.length() - 1);
-                            c = s.charAt(s.length()-1);
-                        }
-                        System.out.println("prev string ::: " + prevSeq );
-                        System.out.println("entered string ::: " + s );
-                        //eliminate duplicates
                         check = false;
-                        if(prevSeq!=null) {
-                            for (char m : prevSeq.toString().toCharArray()) {
-                                if (m == c) {
+
+                        for(int i=0 ; i<s.length() ; i++)
+                            for(int j=0 ; j<s.length() ; j++)
+                                if(s.charAt(i) == s.charAt(j) && i!=j) {
                                     editText.setError("Duplicate");
                                     check = true;
+                                    break;
                                 }
-                            }
-                        }
                         if(s.length() == 4 && !check) {
                             goButton.setVisibility(View.VISIBLE);
                         }
@@ -190,25 +168,35 @@ public class OneFragment extends Fragment{
                             if (ltrToFind.charAt(i) == strEntered.charAt(i))
                                 bulls++;
 
-                        System.out.println("bull and cow values ::: " + bulls + "\n" + cows);
+                        //System.out.println("bull and cow values ::: " + bulls + "\n" + cows);
                         //pass the values to next fragment if both bull and cow are zero
-                        //if (mListener != null) {
                         if(bulls == 0 && cows == 0)
                             mListener.onFragmentInteraction(strEntered);
-
-                        //}
 
                         bullText.setText(bulls + "");
                         cowText.setText(cows + "");
 
-                        //disabling everything and adding a new row
                         goButton.setEnabled(false);
                         editText.setEnabled(false);
                         bullText.setEnabled(false);
                         cowText.setEnabled(false);
 
-                        myItems.add("");
-                        notifyDataSetChanged();
+                        if(bulls != 4) {
+                            myItems.add("");
+                            notifyDataSetChanged();
+                        }
+                        else { //once the word is found
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder.setMessage("You Found it")
+                                    .setTitle("Congrats");
+                            AlertDialog dialog = builder.create();
+                            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            });
+                            builder.show();
+                        }
                     }
                 });
 
