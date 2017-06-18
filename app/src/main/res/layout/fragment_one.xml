@@ -4,20 +4,32 @@
     android:layout_height="fill_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_id">
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/header_footer_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:padding="25dp"
+        android:textSize="28sp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Words"
-        android:id="@+id/textView2"
-        android:height="@dimen/abc_action_bar_stacked_max_height"
-        android:gravity="center_vertical|center_horizontal"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="88dp"
-        android:layout_marginStart="88dp" />
+        android:id="@+id/textView3"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:paddingRight="20dp"
+        android:paddingLeft="20dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_alignTop="@+id/textView4"
+        android:layout_toRightOf="@+id/textView6"
+        android:layout_toEndOf="@+id/textView6" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -25,13 +37,13 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Bulls"
         android:id="@+id/textView4"
-        android:height="@dimen/abc_action_bar_stacked_max_height"
-        android:gravity="center_vertical|center_horizontal"
-        android:layout_alignParentTop="true"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:layout_below="@+id/header_footer_title"
         android:layout_toLeftOf="@+id/textView5"
         android:layout_toStartOf="@+id/textView5"
-        android:layout_marginRight="26dp"
-        android:layout_marginEnd="26dp" />
+        android:layout_marginRight="27dp"
+        android:layout_marginEnd="27dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -39,20 +51,68 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Cows"
         android:id="@+id/textView5"
-        android:height="@dimen/abc_action_bar_stacked_max_height"
-        android:gravity="center_vertical|center_horizontal"
-        android:layout_alignParentTop="true"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:paddingRight="15dp"
+        android:layout_below="@+id/header_footer_title"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="21dp"
-        android:layout_marginEnd="21dp" />
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="No"
+        android:id="@+id/textView6"
+        android:layout_alignTop="@+id/textView3"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="27dp"
+        android:layout_marginStart="27dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp" />
 
     <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/customlist"
-        android:layout_width="fill_parent"
-        android:layout_below="@+id/textView5"
-        android:layout_height="fill_parent"
-        android:descendantFocusability="afterDescendants"
-         />
-    
+        android:layout_below="@+id/textView3"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentEnd="false"
+        android:clickable="true" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/go_button"
+        android:src="@drawable/enter_icon"
+        android:background="@drawable/enter_icon"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:clickable="true"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:paddingRight="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/textView4"
+        android:layout_above="@+id/textView5"
+        android:layout_alignLeft="@+id/textView5"
+        android:layout_alignStart="@+id/textView5" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:textSize="40sp"
+        android:hint="Type"
+        android:ems="3"
+        android:id="@+id/typedWord"
+        android:layout_alignBottom="@+id/header_footer_title"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/textView6"
+        android:layout_alignStart="@+id/textView6"
+        android:layout_alignRight="@+id/textView4"
+        android:layout_alignEnd="@+id/textView4"
+        android:maxLength="4"
+        android:gravity="center_vertical|center_horizontal" />
 </RelativeLayout>

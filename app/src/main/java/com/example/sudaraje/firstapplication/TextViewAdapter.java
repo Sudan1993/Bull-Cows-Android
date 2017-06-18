@@ -55,7 +55,6 @@ public class TextViewAdapter extends BaseAdapter {
                 }
             }
 //        } else {
-//            parent.removeViewAt(23);
 //            gridView = convertView;
 //        }
         return gridView;

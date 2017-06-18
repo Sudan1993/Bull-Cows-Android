@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">WordFinder</string>
     <string name="edit_message">Enter a message</string>
-    <string name="one">one</string>
-    <string name="two">two</string>
+    <string name="one">Play</string>
+    <string name="two">Hint</string>
+    <string name="header_view">header</string>
 
 </resources>
