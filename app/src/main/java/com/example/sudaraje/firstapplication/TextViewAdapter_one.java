@@ -13,6 +13,8 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by sudaraje on 6/18/2017.
@@ -27,31 +29,13 @@ public class TextViewAdapter_one extends BaseAdapter {
     private static int count ;
     private static JSONObject jo;
     private static JSONArray ja;
+    public List<HashMap<String,String>> values;
 
-    public TextViewAdapter_one(Context context) {
+    public TextViewAdapter_one(Context context, List<HashMap<String,String>> values) {
         this.context = context;
+        this.values=values;
     }
 
-    public void getValuesFromTextBox(ArrayList<String> al) throws JSONException {
-        System.out.println(al.toString());
-        if(al.size() != 0) {
-            count++;
-
-            jo = new JSONObject();
-            jo.put("sno",count+"");
-            jo.put("words",al.get(0));
-            jo.put("bulls",al.get(1));
-            jo.put("cows",al.get(2));
-
-            ja = new JSONArray();
-            ja.put(jo);
-
-            word = al.get(0);
-            bullText = al.get(1) + "";
-            cowText = al.get(2) + "";
-            notifyDataSetChanged();
-        }
-    }
     @Override
     public int getViewTypeCount() {
         return 1;
@@ -64,12 +48,12 @@ public class TextViewAdapter_one extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return count;
+        return values.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return position;
+        return values.get(position);
     }
 
     @Override
@@ -80,74 +64,19 @@ public class TextViewAdapter_one extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-//        View v = convertView;
-//        MyViewHolder viewHolder;
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        convertView = inflater.inflate(R.layout.list_view, parent, false);
 
-        if(convertView == null) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_view, parent, false);
-//            v = inflater.inflate(R.layout.list_view, null);
-//            viewHolder = new MyViewHolder(v);
-//            v.setTag(viewHolder);
+        sno = (TextView) convertView.findViewById(R.id.SNO);
+        words = (TextView) convertView.findViewById(R.id.words);
+        bulls = (TextView) convertView.findViewById(R.id.bulls);
+        cows = (TextView) convertView.findViewById(R.id.cows);
 
-            sno = (TextView) convertView.findViewById(R.id.SNO);
-            words = (TextView) convertView.findViewById(R.id.words);
-            bulls = (TextView) convertView.findViewById(R.id.bulls);
-            cows = (TextView) convertView.findViewById(R.id.cows);
+        sno.setText(position+1+"");
+        words.setText(values.get(position).get("entered_string"));
+        bulls.setText(values.get(position).get("bulls"));
+        cows.setText(values.get(position).get("cows"));
 
-//            convertView.setTag(R.id.SNO, sno);
-//            convertView.setTag(R.id.words, words);
-//            convertView.setTag(R.id.bulls, bulls);
-//            convertView.setTag(R.id.cows, cows);
-        }
-//        else {
-//            sno = (TextView) convertView.getTag(R.id.SNO);
-//            words = (TextView) convertView.getTag(R.id.words);
-//            bulls = (TextView) convertView.getTag(R.id.bulls);
-//            cows = (TextView) convertView.getTag(R.id.cows);
-//        }
-
-//        else {
-//            viewHolder = (MyViewHolder) v.getTag();
-//        }
-        //System.out.println("------inside getview------------"+sno+"\n"+word+"\n"+bullText+"\n"+cowText);
-//        viewHolder.sno.setText(count+"");
-//        viewHolder.words.setText(word);
-//        viewHolder.bulls.setText(bullText);
-//        viewHolder.cows.setText(cowText);
-
-//        try {
-//            JSONObject joey = new JSONObject();
-//
-//            if(position == 0){
-//                joey = ja.getJSONObject(position);
-//            }
-//            else{
-//                joey = ja.getJSONObject(position-1);
-//            }
-//            System.out.println(joey.toString());
-//            sno.setText(joey.get("sno")+"");
-//            words.setText(joey.get("words")+"");
-//            bulls.setText(joey.get("bulls")+"");
-//            cows.setText(joey.get("cows")+"");
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-        sno.setText(count+"");
-        words.setText(word);
-        bulls.setText(bullText);
-        cows.setText(cowText);
-
-//        return v;
         return convertView;
     }
-
-    class MyViewHolder {
-        public TextView sno,words,bulls,cows;
-        public MyViewHolder(View base) {
-            sno = (TextView) base.findViewById(R.id.SNO);
-            words = (TextView) base.findViewById(R.id.words);
-            bulls = (TextView) base.findViewById(R.id.bulls);
-            cows = (TextView) base.findViewById(R.id.cows);
-        }
-    } }
+}
