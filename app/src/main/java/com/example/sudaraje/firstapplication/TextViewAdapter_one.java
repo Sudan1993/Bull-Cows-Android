@@ -7,12 +7,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -23,12 +17,8 @@ public class TextViewAdapter_one extends BaseAdapter {
 
 
     private TextView sno,words,bulls,cows;
-    private static String bullText, cowText, word, snoText;
     private static Context context;
     private View lv;
-    private static int count ;
-    private static JSONObject jo;
-    private static JSONArray ja;
     public List<HashMap<String,String>> values;
 
     public TextViewAdapter_one(Context context, List<HashMap<String,String>> values) {
