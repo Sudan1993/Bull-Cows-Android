@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ import java.util.Random;
 
 public class OneFragment extends Fragment{
 
-    private Button go_button = null;
+    private ImageButton go_button = null;
     private EditText typedWord = null;
     private int bulls,cows;
     private boolean check = false;
@@ -72,7 +73,7 @@ public class OneFragment extends Fragment{
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_one, container, false);
         typedWord = (EditText) view.findViewById(R.id.typedWord);
-        go_button = (Button) view.findViewById(R.id.go_button);
+        go_button = (ImageButton) view.findViewById(R.id.go_button);
 
         //get the go button and disable it
         go_button.setVisibility(View.GONE);
