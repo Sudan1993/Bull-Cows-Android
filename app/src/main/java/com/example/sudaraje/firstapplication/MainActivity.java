@@ -26,13 +26,16 @@ public class MainActivity extends AppCompatActivity implements OneFragment.OnFra
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        tabLayout.getTabAt(0).setText("Play");
+        tabLayout.getTabAt(1).setText("Hint");
     }
 
     private void setupViewPager(ViewPager viewPager) {

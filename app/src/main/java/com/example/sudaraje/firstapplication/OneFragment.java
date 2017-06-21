@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,7 +77,8 @@ public class OneFragment extends Fragment{
         go_button = (ImageButton) view.findViewById(R.id.go_button);
 
         //get the go button and disable it
-        go_button.setVisibility(View.GONE);
+        //go_button.setVisibility(View.GONE);
+        go_button.setEnabled(false);
 
         ListView listView = (ListView)view.findViewById(R.id.customlist);
         listView.setItemsCanFocus(true);
@@ -100,7 +102,8 @@ public class OneFragment extends Fragment{
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
 
-                go_button.setVisibility(View.GONE);
+                //go_button.setVisibility(View.GONE);
+                go_button.setEnabled(false);
                 check = false;
 
                 for(int i=0 ; i<s.length() ; i++)
@@ -111,61 +114,81 @@ public class OneFragment extends Fragment{
                             break;
                         }
                 if(s.length() == 4 && !check) {
-                    go_button.setVisibility(View.VISIBLE);
+                    //go_button.setVisibility(View.VISIBLE);
+                    go_button.setEnabled(true);
                 }
+            }
+        });
+
+        typedWord.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // If the event is a key-down event on the "enter" button
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    // Perform action on key press
+                    goButtonClick();
+                    return true;
+                }
+                return false;
             }
         });
 
         go_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                bulls = cows = 0;
-                // Perform action on click
-                String strEntered = typedWord.getText().toString();
-                //different position increment the value of cows
-                for (int i = 0; i < ltrToFind.length(); i++)
-                    for (int j = 0; j < strEntered.length(); j++)
-                        if (ltrToFind.charAt(i) == strEntered.charAt(j) && i != j)
-                            cows++;
-                //same position increment the value of bulls
-                for (int i = 0; i < ltrToFind.length(); i++)
-                    if (ltrToFind.charAt(i) == strEntered.charAt(i))
-                        bulls++;
-
-                System.out.println("bull and cow values ::: " + bulls + "\n" + cows);
-                //pass the values to next fragment if both bull and cow are zero
-                if(bulls == 0 && cows == 0)
-                    mListener.onFragmentInteraction(strEntered);
-
-                go_button.setVisibility(View.GONE);
-                typedWord.setText("");
-
-                if(bulls != 4) {
-
-                    HashMap<String,String> value_entry = new HashMap();
-                    value_entry.put("entered_string",strEntered);
-                    value_entry.put("bulls",bulls+"");
-                    value_entry.put("cows",cows+"");
-
-                    values.add(value_entry);
-                    myAdapter.notifyDataSetChanged();
-
-                }
-                else { //once the word is found
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setMessage("You Found it")
-                            .setTitle("Congrats");
-                    AlertDialog dialog = builder.create();
-                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                        }
-                    });
-                    builder.show();
-                }
+                goButtonClick();
             }
         });
 
         return view;
+    }
+    public void goButtonClick()
+    {
+        bulls = cows = 0;
+        ltrToFind = ltrToFind.toLowerCase();
+        // Perform action on click
+        String strEntered = typedWord.getText().toString().toLowerCase();
+        //different position increment the value of cows
+        for (int i = 0; i < ltrToFind.length(); i++)
+            for (int j = 0; j < strEntered.length(); j++)
+                if (ltrToFind.charAt(i) == strEntered.charAt(j) && i != j)
+                    cows++;
+        //same position increment the value of bulls
+        for (int i = 0; i < ltrToFind.length(); i++)
+            if (ltrToFind.charAt(i) == strEntered.charAt(i))
+                bulls++;
+
+        System.out.println("bull and cow values ::: " + bulls + "\n" + cows);
+        //pass the values to next fragment if both bull and cow are zero
+        if(bulls == 0 && cows == 0)
+            mListener.onFragmentInteraction(strEntered);
+
+        //go_button.setVisibility(View.GONE);
+        go_button.setEnabled(false);
+        typedWord.setText("");
+
+        if(bulls != 4) {
+
+            HashMap<String,String> value_entry = new HashMap();
+            value_entry.put("entered_string",strEntered);
+            value_entry.put("bulls",bulls+"");
+            value_entry.put("cows",cows+"");
+
+            values.add(value_entry);
+            myAdapter.notifyDataSetChanged();
+
+        }
+        else { //once the word is found
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage("You Found it")
+                    .setTitle("Congrats");
+            AlertDialog dialog = builder.create();
+            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                }
+            });
+            builder.show();
+        }
     }
 
     public interface OnFragmentInteractionListener {

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WordFinder</string>
+    <string name="app_name">BullCow</string>
     <string name="edit_message">Enter a message</string>
     <string name="one">Play</string>
     <string name="two">Hint</string>
