@@ -1,0 +1,325 @@
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+index ea16cc2..b827e45 100644
+--- a/app/src/main/AndroidManifest.xml
++++ b/app/src/main/AndroidManifest.xml
+@@ -13,5 +13,12 @@
+                 <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
+         </activity>
++
++        <activity android:name=".HelpActivity" android:windowSoftInputMode="adjustResize">
++            <intent-filter>
++                <action android:name="android.intent.action.MAIN" />
++                <category android:name="android.intent.category.LAUNCHER" />
++            </intent-filter>
++        </activity>
+     </application>
+ </manifest>
+\ No newline at end of file
+diff --git a/app/src/main/java/com/example/sudaraje/firstapplication/MainActivity.java b/app/src/main/java/com/example/sudaraje/firstapplication/MainActivity.java
+index a712db5..2280fdc 100644
+--- a/app/src/main/java/com/example/sudaraje/firstapplication/MainActivity.java
++++ b/app/src/main/java/com/example/sudaraje/firstapplication/MainActivity.java
+@@ -1,5 +1,8 @@
+ package com.example.sudaraje.firstapplication;
+ 
++import android.app.AlertDialog;
++import android.content.DialogInterface;
++import android.content.Intent;
+ import android.os.Bundle;
+ import android.support.design.widget.TabLayout;
+ import android.support.v4.app.Fragment;
+@@ -8,6 +11,11 @@ import android.support.v4.app.FragmentPagerAdapter;
+ import android.support.v4.view.ViewPager;
+ import android.support.v7.app.AppCompatActivity;
+ import android.support.v7.widget.Toolbar;
++import android.view.Menu;
++import android.view.MenuInflater;
++import android.view.MenuItem;
++import android.widget.HeaderViewListAdapter;
++import android.widget.Toast;
+ 
+ import java.util.ArrayList;
+ import java.util.List;
+@@ -46,21 +54,84 @@ public class MainActivity extends AppCompatActivity implements OneFragment.OnFra
+     }
+ 
+     @Override
++    public boolean onCreateOptionsMenu(Menu menu)
++    {
++        MenuInflater inflater = getMenuInflater();
++        inflater.inflate(R.menu.main, menu);
++        return true;
++    }
++
++    @Override
++    public boolean onOptionsItemSelected(MenuItem item) {
++        switch (item.getItemId()) {
++            case R.id.refresh_menu:
++                AlertDialog.Builder builder = new AlertDialog.Builder(this);
++                builder.setMessage("Are you sure...!!!")
++                        .setTitle("Refresh");
++                AlertDialog dialog = builder.create();
++                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
++                    @Override
++                    public void onClick(DialogInterface dialog, int id) {
++                        //refresh both the fragments on ok click
++                        OneFragment oneFragment = new OneFragment();
++                        TwoFragment twoFragment = new TwoFragment();
++                        refreshFragments(oneFragment,"");
++                        refreshFragments(twoFragment,"");
++                    }
++                });
++                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
++                    @Override
++                    public void onClick(DialogInterface dialog, int which) {
++
++                    }
++                });
++                builder.show();
++                return true;
++            case R.id.help_menu:
++                Toast.makeText(this, "You have selected Help Menu", Toast.LENGTH_SHORT).show();
++                return true;
++            default:
++                return super.onOptionsItemSelected(item);
++        }
++    }
++
++    public void refreshFragments(Fragment fragmentRef,String bundleString)
++    {
++        Bundle bundle = new Bundle();
++        if( !bundleString.isEmpty() ) {
++            bundle.putString("txtToBeDeleted", bundleString);
++            fragmentRef.setArguments(bundle);
++        }
++        android.app.FragmentManager fm = getFragmentManager();
++        android.app.FragmentTransaction ft = fm.beginTransaction();
++
++        getSupportFragmentManager()
++                .beginTransaction()
++                .detach(fragmentRef)
++                .attach(fragmentRef)
++                .commit();
++        ft.commit();
++    }
++
++    @Override
+     public void onFragmentInteraction(String stringEntered) {
+ 
+-        Fragment secondFragment = new TwoFragment();
++        TwoFragment secondFragment = new TwoFragment();
++        secondFragment.valueChange(stringEntered);
++        refreshFragments(secondFragment,"");
+         try {
+-            android.app.FragmentManager fm = getFragmentManager();
+-            android.app.FragmentTransaction ft = fm.beginTransaction();
+-            Bundle bundle = new Bundle();
+-            bundle.putString("txtToBeDeleted", stringEntered);
+-            secondFragment.setArguments(bundle);
+-            getSupportFragmentManager()
+-                    .beginTransaction()
+-                    .detach(secondFragment)
+-                    .attach(secondFragment)
+-                    .commit();
+-            ft.commit();
++//            android.app.FragmentManager fm = getFragmentManager();
++//            android.app.FragmentTransaction ft = fm.beginTransaction();
++//            Bundle bundle = new Bundle();
++//            bundle.putString("txtToBeDeleted", stringEntered);
++//            secondFragment.setArguments(bundle);
++//            refreshFragments(secondFragment,stringEntered);
++//            getSupportFragmentManager()
++//                    .beginTransaction()
++//                    .detach(secondFragment)
++//                    .attach(secondFragment)
++//                    .commit();
++//            ft.commit();
+         }
+         catch(Exception e){
+             e.printStackTrace();
+diff --git a/app/src/main/java/com/example/sudaraje/firstapplication/TextViewAdapter.java b/app/src/main/java/com/example/sudaraje/firstapplication/TextViewAdapter.java
+index 727ece1..602d6a1 100644
+--- a/app/src/main/java/com/example/sudaraje/firstapplication/TextViewAdapter.java
++++ b/app/src/main/java/com/example/sudaraje/firstapplication/TextViewAdapter.java
+@@ -14,20 +14,23 @@ public class TextViewAdapter extends BaseAdapter {
+     private static char[] textViewValues = new char[]{'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+     private static ArrayList<Character> al=new ArrayList<Character>();
+     private static String textToDelete ;
++    private static ArrayList<Character> alc = new ArrayList<Character>();
+ 
+-
+-    public TextViewAdapter(Context context,String ch[],String txtToBeDeleted) {
++    public TextViewAdapter(Context context,ArrayList<Character> alc) {
+         this.context = context;
+-        //ch = new char[]{'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+-        //textViewValues = ch;
+-        if(al.size()==0) {
+-            for(int i = 0; i < 26; i++) {
+-                al.add(textViewValues[i]);
+-            }
+-        }
+-        if(txtToBeDeleted != null) {
+-            textToDelete = txtToBeDeleted.toUpperCase();
+-        }
++//        if(al.size()==0) {
++//            for(int i = 0; i < 26; i++) {
++//                al.add(textViewValues[i]);
++//            }
++//        }
++        this.alc = alc;
++//        if(txtToBeDeleted != null) {
++//            textToDelete = txqwzxtToBeDeleted.toUpperCase();
++//        }
++    }
++
++    public void chagneValues(ArrayList<Character> alc){
++        this.alc = alc;
+     }
+ 
+     public View getView(int position, View convertView, ViewGroup parent) {
+@@ -36,24 +39,25 @@ public class TextViewAdapter extends BaseAdapter {
+                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+ 
+         View gridView;
+-
++//
+ //        if (convertView == null) {
+-            gridView = new View(context);
+-            gridView = inflater.inflate(R.layout.item, null);
++        gridView = new View(context);
++        gridView = inflater.inflate(R.layout.item, null);
+             TextView textView = (TextView) gridView.findViewById(R.id.grid_item_label);
+-            textView.setText(al.get(position).toString());
+-            if(this.textToDelete != null) {
+-                String strPresent = textView.getText().toString().toUpperCase();
+-                for(char ch : strPresent.toCharArray()) {
+-                    for(int i=0 ; i<4 ;i++)
+-                        if(ch == textToDelete.charAt(i)) {
+-                            int index = al.indexOf(ch);
+-                            if(index != -1)
+-                                al.set(index,' ');
+-                            textView.setVisibility(View.GONE);
+-                        }
+-                }
+-            }
++            textView.setText(alc.get(position).toString().toUpperCase());
++        System.out.print("inside getview  " + alc.get(position).toString() + "\n");
++//            if(this.textToDelete != null) {
++//                String strPresent = textView.getText().toString().toUpperCase();
++//                for(char ch : strPresent.toCharArray()) {
++//                    for(int i=0 ; i<4 ;i++)
++//                        if(ch == textToDelete.charAt(i)) {
++//                            int index = al.indexOf(ch);
++//                            if(index != -1)
++//                                al.set(index,' ');
++//                            textView.setVisibility(View.GONE);
++//                        }
++//                }
++//            }
+ //        } else {
+ //            gridView = convertView;
+ //        }
+@@ -62,7 +66,7 @@ public class TextViewAdapter extends BaseAdapter {
+ 
+     @Override
+     public int getCount() {
+-        return al.size();
++        return alc.size();
+     }
+ 
+     @Override
+diff --git a/app/src/main/java/com/example/sudaraje/firstapplication/TwoFragment.java b/app/src/main/java/com/example/sudaraje/firstapplication/TwoFragment.java
+index 3356d8b..bba4e54 100644
+--- a/app/src/main/java/com/example/sudaraje/firstapplication/TwoFragment.java
++++ b/app/src/main/java/com/example/sudaraje/firstapplication/TwoFragment.java
+@@ -6,18 +6,42 @@ import android.view.View;
+ import android.view.ViewGroup;
+ import android.widget.GridView;
+ 
++import java.util.ArrayList;
++
+ public class TwoFragment extends android.support.v4.app.Fragment {
+     public String[] textViewValues;
+     private String txtToBeDeleted = null;
++    public static ArrayList<Character> alc = null;
++    public static TextViewAdapter myAdapter = null;
+ 
+     public TwoFragment() {
+         // Required empty public constructor
++        String str = "abcdefghijklmnopqrstuvwxyz";
++        alc = new ArrayList<Character>();
++        for(int i=0 ;i<str.length() ; i++) {
++            alc.add(str.charAt(i));
++        }
++    }
++
++    public void valueChange(String txtToBeDeleted){
++        txtToBeDeleted = txtToBeDeleted.toLowerCase();
++
++        System.out.println("before" + alc+"");
++        for(int i=0 ; i<alc.size() ; i++)
++            for(int j=0 ; j<txtToBeDeleted.length() ; j++)
++                if(alc.get(i) == txtToBeDeleted.charAt(j))
++                    alc.set(i,' ');
++        System.out.println("after" + alc+"");
++        myAdapter.chagneValues(alc);
++        myAdapter.notifyDataSetChanged();
++
+     }
+ 
+     @Override
+     public void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+         textViewValues  = new String[]{"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
++
+     }
+ 
+     @Override
+@@ -30,10 +54,11 @@ public class TwoFragment extends android.support.v4.app.Fragment {
+             txtToBeDeleted = getArguments().getString("txtToBeDeleted");
+         View view = inflater.inflate(R.layout.fragment_two, container, false);
+         GridView gridview = (GridView) view.findViewById(R.id.gridviewCustom);
+-        gridview.setAdapter(new TextViewAdapter(this.getContext(), textViewValues,txtToBeDeleted));
++        myAdapter = new TextViewAdapter(this.getContext(),alc);
++        gridview.setAdapter(myAdapter);
+ 
+         return view;
+-
+     }
+ 
++
+ }
+\ No newline at end of file
+diff --git a/app/src/main/res/layout/activity_main.xml b/app/src/main/res/layout/activity_main.xml
+index 3c4b197..d013c10 100644
+--- a/app/src/main/res/layout/activity_main.xml
++++ b/app/src/main/res/layout/activity_main.xml
+@@ -29,12 +29,5 @@
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         app:layout_behavior="@string/appbar_scrolling_view_behavior"  />
+-    <android.support.design.widget.FloatingActionButton
+-        android:id="@+id/fab"
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:layout_gravity="end|bottom"
+-        android:layout_margin="@dimen/fab_margin"
+-        android:src="@drawable/ic_cached_black_48dp"
+-        />
++
+ </android.support.design.widget.CoordinatorLayout>
+\ No newline at end of file
+diff --git a/app/src/main/res/values/strings.xml b/app/src/main/res/values/strings.xml
+index 5210db7..8c5f7f2 100644
+--- a/app/src/main/res/values/strings.xml
++++ b/app/src/main/res/values/strings.xml
+@@ -4,5 +4,8 @@
+     <string name="one">Play</string>
+     <string name="two">Hint</string>
+     <string name="header_view">header</string>
++    <string name="refresh">Refresh</string>
++    <string name="help">About</string>
++
+ 
+ </resources>

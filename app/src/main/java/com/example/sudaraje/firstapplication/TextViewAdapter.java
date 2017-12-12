@@ -14,7 +14,7 @@ public class TextViewAdapter extends BaseAdapter {
     private static char[] textViewValues = new char[]{'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
     private static ArrayList<Character> al=new ArrayList<Character>();
     private static String textToDelete ;
-
+    private static ArrayList<Character> alc = new ArrayList<Character>();
 
     public TextViewAdapter(Context context,String ch[],String txtToBeDeleted) {
         this.context = context;
@@ -25,9 +25,14 @@ public class TextViewAdapter extends BaseAdapter {
                 al.add(textViewValues[i]);
             }
         }
+        this.alc = alc;
         if(txtToBeDeleted != null) {
             textToDelete = txtToBeDeleted.toUpperCase();
         }
+    }
+
+    public void chagneValues(ArrayList<Character> alc){
+        this.alc = alc;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -36,12 +41,13 @@ public class TextViewAdapter extends BaseAdapter {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View gridView;
-
+//
 //        if (convertView == null) {
-            gridView = new View(context);
-            gridView = inflater.inflate(R.layout.item, null);
+        gridView = new View(context);
+        gridView = inflater.inflate(R.layout.item, null);
             TextView textView = (TextView) gridView.findViewById(R.id.grid_item_label);
-            textView.setText(al.get(position).toString());
+            textView.setText(al.get(position).toString().toUpperCase());
+        //System.out.print("inside getview  " + alc.get(position).toString() + "\n");
             if(this.textToDelete != null) {
                 String strPresent = textView.getText().toString().toUpperCase();
                 for(char ch : strPresent.toCharArray()) {

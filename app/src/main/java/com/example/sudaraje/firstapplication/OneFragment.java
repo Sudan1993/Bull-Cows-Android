@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -83,12 +85,20 @@ public class OneFragment extends Fragment{
         ListView listView = (ListView)view.findViewById(R.id.customlist);
         listView.setItemsCanFocus(true);
 
-        myAdapter= new TextViewAdapter_one(this.getContext(),values);
+        myAdapter= new TextViewAdapter_one(this.getContext(), values);
         listView.setAdapter(myAdapter);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             listView.setNestedScrollingEnabled(true);
         }
+
+        ((MainActivity)getActivity()).setFragmentRefreshListener(new MainActivity.FragmentRefreshListener() {
+            @Override
+            public void onRefresh() {
+                values.clear();
+                myAdapter.notifyDataSetChanged();
+            }
+        });
 
         typedWord.addTextChangedListener(new TextWatcher() {
 
@@ -102,7 +112,7 @@ public class OneFragment extends Fragment{
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
 
-                //go_button.setVisibility(View.GONE);
+                go_button.setVisibility(View.GONE);
                 go_button.setEnabled(false);
                 check = false;
 
@@ -114,7 +124,7 @@ public class OneFragment extends Fragment{
                             break;
                         }
                 if(s.length() == 4 && !check) {
-                    //go_button.setVisibility(View.VISIBLE);
+                    go_button.setVisibility(View.VISIBLE);
                     go_button.setEnabled(true);
                 }
             }
@@ -159,8 +169,8 @@ public class OneFragment extends Fragment{
 
         System.out.println("bull and cow values ::: " + bulls + "\n" + cows);
         //pass the values to next fragment if both bull and cow are zero
-        if(bulls == 0 && cows == 0)
-            mListener.onFragmentInteraction(strEntered);
+        if(bulls == 0 && cows == 0){}
+           //mListener.onFragmentInteraction(strEntered);
 
         //go_button.setVisibility(View.GONE);
         go_button.setEnabled(false);
@@ -173,7 +183,7 @@ public class OneFragment extends Fragment{
             value_entry.put("bulls",bulls+"");
             value_entry.put("cows",cows+"");
 
-            values.add(value_entry);
+            values.add(0,value_entry);
             myAdapter.notifyDataSetChanged();
 
         }
@@ -181,10 +191,11 @@ public class OneFragment extends Fragment{
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setMessage("You Found it")
                     .setTitle("Congrats");
-            AlertDialog dialog = builder.create();
             builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int id) {
+                    values.clear();
+                    myAdapter.notifyDataSetChanged();
                 }
             });
             builder.show();
