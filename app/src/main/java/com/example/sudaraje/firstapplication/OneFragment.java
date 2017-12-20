@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -40,14 +41,14 @@ public class OneFragment extends Fragment{
     List<HashMap<String,String>> values=new ArrayList<>();
 
     public OneFragment() {
-        str = new String[]{"hike","mike","mole","mile","lite","peak","pear","mine","shut","nose","bike","mild","lick","neat","vein","kith","nerd"};
+        str = new String[]{"hike","mike","mole","mile","lite","peak","pear","mine","shut","nose","bike","mild","lick","neat","vein","kith","nerd","word","zero"};
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState);
         //randomly select a value from the string array
         Random rn = new Random();
-        int randomNo = rn.nextInt(10) + 1;
+        int randomNo = rn.nextInt(19) + 1;
         ltrToFind = str[randomNo];
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
@@ -97,6 +98,8 @@ public class OneFragment extends Fragment{
             public void onRefresh() {
                 values.clear();
                 myAdapter.notifyDataSetChanged();
+
+                mListener.onFragmentInteraction("Reset2");
             }
         });
 
@@ -153,6 +156,10 @@ public class OneFragment extends Fragment{
     }
     public void goButtonClick()
     {
+
+        InputMethodManager imm = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(typedWord.getWindowToken(), 0);
+
         bulls = cows = 0;
         ltrToFind = ltrToFind.toLowerCase();
         // Perform action on click
@@ -169,8 +176,9 @@ public class OneFragment extends Fragment{
 
         System.out.println("bull and cow values ::: " + bulls + "\n" + cows);
         //pass the values to next fragment if both bull and cow are zero
-        if(bulls == 0 && cows == 0){}
-           //mListener.onFragmentInteraction(strEntered);
+        if(bulls == 0 && cows == 0){
+            mListener.onFragmentInteraction(strEntered);
+        }
 
         //go_button.setVisibility(View.GONE);
         go_button.setEnabled(false);
@@ -191,11 +199,13 @@ public class OneFragment extends Fragment{
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setMessage("You Found it")
                     .setTitle("Congrats");
+
             builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int id) {
                     values.clear();
                     myAdapter.notifyDataSetChanged();
+                    mListener.onFragmentInteraction("Reset2");
                 }
             });
             builder.show();
@@ -205,7 +215,5 @@ public class OneFragment extends Fragment{
     public interface OnFragmentInteractionListener {
         public void onFragmentInteraction(String stringEntered);
     }
-
-
 
 }

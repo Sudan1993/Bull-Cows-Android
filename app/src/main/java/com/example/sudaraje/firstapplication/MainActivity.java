@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity implements OneFragment.OnFra
         tabLayout.setupWithViewPager(viewPager);
 
         tabLayout.getTabAt(0).setText("Play");
-        //tabLayout.removeTabAt(1);
         tabLayout.getTabAt(1).setText("Hint");
     }
 
@@ -70,15 +69,10 @@ public class MainActivity extends AppCompatActivity implements OneFragment.OnFra
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage("Are you sure...!!!")
                         .setTitle("Refresh");
-                AlertDialog dialog = builder.create();
                 builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         //refresh both the fragments on ok click
-                        OneFragment oneFragment = new OneFragment();
-                        TwoFragment twoFragment = new TwoFragment();
-                        //refreshFragments(oneFragment,"refresh");
-                        //refreshFragments(twoFragment,"");
                         getFragmentRefreshListener().onRefresh();
                     }
                 });
@@ -107,48 +101,8 @@ public class MainActivity extends AppCompatActivity implements OneFragment.OnFra
 
     private FragmentRefreshListener fragmentRefreshListener;
 
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
-//
-//
-//        Button b = (Button)findViewById(R.id.btnRefreshFragment);
-//
-//        b.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if(getFragmentRefreshListener()!=null){
-//                    getFragmentRefreshListener().onRefresh();
-//                }
-//            }
-//        });
-//
-//
-//    }
-
-
     public interface FragmentRefreshListener{
         void onRefresh();
-    }
-
-    public void refreshFragments(Fragment fragmentRef,String bundleString)
-    {
-        Bundle bundle = new Bundle();
-        if( !bundleString.isEmpty() ) {
-            bundle.putString("txtToFragment", bundleString);
-            fragmentRef.setArguments(bundle);
-        }
-        android.app.FragmentManager fm = getFragmentManager();
-        android.app.FragmentTransaction ft = fm.beginTransaction();
-
-        getSupportFragmentManager()
-                .beginTransaction()
-                .detach(fragmentRef)
-                .attach(fragmentRef)
-                .commit();
-        ft.commit();
     }
 
     @Override
@@ -156,24 +110,7 @@ public class MainActivity extends AppCompatActivity implements OneFragment.OnFra
 
         TwoFragment secondFragment = new TwoFragment();
         secondFragment.valueChange(stringEntered);
-        //refreshFragments(secondFragment,"");
-        try {
-//            android.app.FragmentManager fm = getFragmentManager();
-//            android.app.FragmentTransaction ft = fm.beginTransaction();
-//            Bundle bundle = new Bundle();
-//            bundle.putString("txtToBeDeleted", stringEntered);
-//            secondFragment.setArguments(bundle);
-//            refreshFragments(secondFragment,stringEntered);
-//            getSupportFragmentManager()
-//                    .beginTransaction()
-//                    .detach(secondFragment)
-//                    .attach(secondFragment)
-//                    .commit();
-//            ft.commit();
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
+
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

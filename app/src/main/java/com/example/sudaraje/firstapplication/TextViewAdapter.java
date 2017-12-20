@@ -16,59 +16,28 @@ public class TextViewAdapter extends BaseAdapter {
     private static String textToDelete ;
     private static ArrayList<Character> alc = new ArrayList<Character>();
 
-    public TextViewAdapter(Context context,String ch[],String txtToBeDeleted) {
+    public TextViewAdapter(Context context,ArrayList<Character>alc) {
         this.context = context;
-        //ch = new char[]{'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
-        //textViewValues = ch;
-        if(al.size()==0) {
-            for(int i = 0; i < 26; i++) {
-                al.add(textViewValues[i]);
-            }
-        }
         this.alc = alc;
-        if(txtToBeDeleted != null) {
-            textToDelete = txtToBeDeleted.toUpperCase();
-        }
     }
 
-    public void chagneValues(ArrayList<Character> alc){
+    public void changeValues(ArrayList<Character> alc){
         this.alc = alc;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View gridView;
-//
-//        if (convertView == null) {
-        gridView = new View(context);
         gridView = inflater.inflate(R.layout.item, null);
-            TextView textView = (TextView) gridView.findViewById(R.id.grid_item_label);
-            textView.setText(al.get(position).toString().toUpperCase());
-        //System.out.print("inside getview  " + alc.get(position).toString() + "\n");
-            if(this.textToDelete != null) {
-                String strPresent = textView.getText().toString().toUpperCase();
-                for(char ch : strPresent.toCharArray()) {
-                    for(int i=0 ; i<4 ;i++)
-                        if(ch == textToDelete.charAt(i)) {
-                            int index = al.indexOf(ch);
-                            if(index != -1)
-                                al.set(index,' ');
-                            textView.setVisibility(View.GONE);
-                        }
-                }
-            }
-//        } else {
-//            gridView = convertView;
-//        }
+        TextView textView = (TextView) gridView.findViewById(R.id.grid_item_label);
+        textView.setText(alc.get(position).toString().toUpperCase());
         return gridView;
     }
 
     @Override
     public int getCount() {
-        return al.size();
+        return alc.size();
     }
 
     @Override
