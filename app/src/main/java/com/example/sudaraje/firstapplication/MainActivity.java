@@ -1,6 +1,8 @@
 package com.example.sudaraje.firstapplication;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,12 +10,14 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.HeaderViewListAdapter;
 import android.widget.Toast;
 
@@ -26,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements OneFragment.OnFra
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    public ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements OneFragment.OnFra
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+
         adapter.addFragment(new OneFragment(), "ONE");
         adapter.addFragment(new TwoFragment(), "TWO");
         viewPager.setAdapter(adapter);
@@ -87,6 +92,42 @@ public class MainActivity extends AppCompatActivity implements OneFragment.OnFra
             case R.id.help_menu:
                 Toast.makeText(this, "You have selected Help Menu", Toast.LENGTH_SHORT).show();
                 return true;
+            case R.id.level_menu:
+                final CharSequence[] items = {" Easy "," Medium "," Hard "};
+
+                // Creating and Building the Dialog
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.setTitle("Select The Difficulty Level");
+                Dialog levelDialog = new Dialog(this);
+                alert.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        String wordLength = new String();
+                        switch(item)
+                        {
+                            case 0:
+                                wordLength = "3";
+                                break;
+                            case 1:
+                                wordLength = "4";
+                                break;
+                            case 2:
+                                wordLength = "5";
+                                break;
+                        }
+                        dialog.dismiss();
+
+                        Bundle bundle = new Bundle();
+                        bundle.putString("wordLength", wordLength);
+                        OneFragment oneFragment = new OneFragment();
+                        oneFragment.setArguments(bundle);
+                        adapter.setBundle(bundle);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+                levelDialog = alert.create();
+                levelDialog.show();
+
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -113,17 +154,39 @@ public class MainActivity extends AppCompatActivity implements OneFragment.OnFra
 
     }
 
-    class ViewPagerAdapter extends FragmentPagerAdapter {
+    class ViewPagerAdapter extends FragmentStatePagerAdapter{
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
+        private Bundle fragmentBundle = new Bundle();
 
         public ViewPagerAdapter(FragmentManager manager) {
             super(manager);
         }
 
+
+
+        public void setBundle(Bundle data){
+            fragmentBundle = data;
+        }
+
         @Override
         public Fragment getItem(int position) {
-            return mFragmentList.get(position);
+            switch (position){
+                case 0:
+                    OneFragment oneFragment = new OneFragment();
+                    oneFragment.setArguments(fragmentBundle);
+                    return oneFragment;
+                case 1:
+                    return new TwoFragment();
+                default:
+                    return mFragmentList.get(position);
+            }
+
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
         }
 
         @Override

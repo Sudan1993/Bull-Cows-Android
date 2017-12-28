@@ -7,7 +7,10 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.internal.app.ToolbarActionBar;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -20,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,15 +45,13 @@ public class OneFragment extends Fragment{
     List<HashMap<String,String>> values=new ArrayList<>();
 
     public OneFragment() {
-        str = new String[]{"hike","mike","mole","mile","lite","peak","pear","mine","shut","nose","bike","mild","lick","neat","vein","kith","nerd","word","zero"};
+
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState);
-        //randomly select a value from the string array
-        Random rn = new Random();
-        int randomNo = rn.nextInt(19) + 1;
-        ltrToFind = str[randomNo];
+    public void onCreate(Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }
@@ -74,9 +76,34 @@ public class OneFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        super.onCreate(savedInstanceState);
+        String wordLength = new String("");
+
+        if (getArguments() != null) {
+           wordLength  = getArguments().getString("wordLength");
+           if(wordLength == null)
+               Toast.makeText(this.getContext(),"Type a 4 letter word", Toast.LENGTH_SHORT).show();
+           else
+               Toast.makeText(this.getContext(),"Type a " + wordLength + " letter word", Toast.LENGTH_SHORT).show();
+        }
+
+        if(wordLength != null && wordLength.equalsIgnoreCase("3"))
+            str = new String[]{"cat","rat","kin","man","hen","nib","hat","mat","pat","bot","jet","lit","new","ten","mid","let","map","nap","fat","mix","pan","oar","nut","pub","ray","rod","rum","spy","yak","yam"};
+        else if(wordLength != null && wordLength.equalsIgnoreCase("5"))
+            str = new String[]{"jumbo","quack","jerky","crazy","proxy","spike","speak","mango","alter","amend","amids","anime","anode","amino","awful","beach","beast","beats","beard","beans","crawl","curse","dance","decaf","decoy","devil","equal","exist","exile","fancy"
+                    ,"fairy","faith","fancy","fault","feast","flora","fetch","flats","frock","frost","germs","ghost","glove","graze","grope"};
+        else
+            str = new String[]{"hike","mike","mole","mile","lite","peak","pear","mine","shut","nose","bike","mild","lick","neat","vein","kith","nerd","word","zero"
+                    ,"auto","hail","hair","bail","bait","bean","beam","beak","bind","blue","blur","born","pork","bunk"};
+        //randomly select a value from the string array
+        Random rn = new Random();
+        int randomNo = rn.nextInt(20 );
+        ltrToFind = str[randomNo];
+
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_one, container, false);
         typedWord = (EditText) view.findViewById(R.id.typedWord);
+        typedWord.setFilters(new InputFilter[] {new InputFilter.LengthFilter(ltrToFind.length())});
         go_button = (ImageButton) view.findViewById(R.id.go_button);
 
         //get the go button and disable it
@@ -126,7 +153,7 @@ public class OneFragment extends Fragment{
                             check = true;
                             break;
                         }
-                if(s.length() == 4 && !check) {
+                if(s.length() == ltrToFind.length() && !check) {
                     go_button.setVisibility(View.VISIBLE);
                     go_button.setEnabled(true);
                 }
@@ -184,7 +211,7 @@ public class OneFragment extends Fragment{
         go_button.setEnabled(false);
         typedWord.setText("");
 
-        if(bulls != 4) {
+        if(bulls != ltrToFind.length()) {
 
             HashMap<String,String> value_entry = new HashMap();
             value_entry.put("entered_string",strEntered);

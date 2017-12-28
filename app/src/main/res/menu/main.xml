@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/refresh_menu"
-        android:title="@string/refresh"
-        />
-    <item android:id="@+id/help_menu"
-        android:title="@string/help"
-        />
+    <item android:id="@+id/refresh_menu" android:title="@string/refresh" />
+    <item android:id="@+id/level_menu" android:title="Level" />
+    <item android:id="@+id/help_menu" android:title="@string/help" />
 </menu>
