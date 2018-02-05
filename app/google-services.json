@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "373165758201",
+    "project_id": "firebase-word-finder"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:373165758201:android:528f93b59fcdf632",
+        "android_client_info": {
+          "package_name": "word.game.sudaraje.firstapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "373165758201-1jhpf2p6374295g6451fs64f19neif6n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "word.game.sudaraje.firstapplication",
+            "certificate_hash": "baf90bef8aa215279638e018b4b9118dc25a4536"
+          }
+        },
+        {
+          "client_id": "373165758201-6trigvsl9omvjqh766edvgljk1plisu2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNFvKyF7ohJMf_22TQNJ_a71Zqo-gXTgA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

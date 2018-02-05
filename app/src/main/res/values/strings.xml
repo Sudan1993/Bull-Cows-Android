@@ -1,11 +1,11 @@
 <resources>
-    <string name="app_name">BullCow</string>
+    <string name="app_name">Word Finder</string>
     <string name="edit_message">Enter a message</string>
     <string name="one">Play</string>
     <string name="two">Hint</string>
     <string name="header_view">header</string>
     <string name="refresh">Refresh</string>
     <string name="help">About</string>
-
+    <string name="facebook_app_id">269031953628679</string>
 
 </resources>
