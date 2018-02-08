@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -22,6 +23,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.facebook.AccessToken;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements OneFragment.OnFra
     private TabLayout tabLayout;
     private ViewPager viewPager;
     public ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+    private GoogleSignInClient mGoogleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +44,6 @@ public class MainActivity extends AppCompatActivity implements OneFragment.OnFra
         setContentView(R.layout.activity_main);
 
         Session session = new Session(getApplicationContext());
-        Log.d("accessToken::::",session.getAccesstoken());
-        Log.d("UserName::::",session.getUsename());
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -90,11 +92,14 @@ public class MainActivity extends AppCompatActivity implements OneFragment.OnFra
         switch (item.getItemId()) {
             case 3:
                 Session session = new Session(getApplicationContext());
-                if(session.deleteToken()){
-                    Intent intent = new Intent(MainActivity.this,LoginActivity.class);
-                    AccessToken.setCurrentAccessToken(null);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+                AccessToken.setCurrentAccessToken(null);
+                Bundle parameters = new Bundle();
+                parameters.putString("isFbLoggedIn", session.isFbLoggedIn());
+                parameters.putString("isGooglePlusLoggedIn", session.isGoogleLoggedIn());
+                intent.putExtras(parameters);
+                startActivity(intent);
+                session.deleteToken();
                 return true;
             case 1:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);

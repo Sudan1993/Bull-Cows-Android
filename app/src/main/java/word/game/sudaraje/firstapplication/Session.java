@@ -11,6 +11,25 @@ import android.preference.PreferenceManager;
 public class Session {
     private SharedPreferences prefs;
 
+    public String isFbLoggedIn() {
+        String isFbLoggedIn = prefs.getString("fbLoggedIn","");
+        return isFbLoggedIn;
+    }
+
+    public void setFbLoggedIn(boolean fbLoggedIn) {
+        prefs.edit().putString("fbLoggedIn", String.valueOf(fbLoggedIn)).commit();
+    }
+
+    public String isGoogleLoggedIn() {
+        String googleLoggedIn = prefs.getString("googleLoggedIn","");
+        return googleLoggedIn;
+    }
+
+    public void setGoogleLoggedIn(boolean googleLoggedIn) {
+        prefs.edit().putString("googleLoggedIn", String.valueOf(googleLoggedIn)).commit();
+
+    }
+
     public Session(Context cntx) {
         // TODO Auto-generated constructor stub
         prefs = PreferenceManager.getDefaultSharedPreferences(cntx);
@@ -35,12 +54,16 @@ public class Session {
     public boolean deleteToken(){
         prefs.edit().remove("accessToken").commit();
         prefs.edit().remove("username").commit();
+        prefs.edit().remove("googleLoggedIn").commit();
+        prefs.edit().remove("fbLoggedIn").commit();
+
         if(prefs.getString("accessToken","").equals("") && prefs.getString("username","").equals("")){
             return true;
         }
         else{
             return false;
         }
-
     }
+
+
 }
