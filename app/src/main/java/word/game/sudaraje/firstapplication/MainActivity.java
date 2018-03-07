@@ -194,8 +194,6 @@ public class MainActivity extends AppCompatActivity implements OneFragment.OnFra
             super(manager);
         }
 
-
-
         public void setBundle(Bundle data){
             fragmentBundle = data;
         }

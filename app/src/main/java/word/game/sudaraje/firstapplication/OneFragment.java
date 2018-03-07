@@ -227,9 +227,9 @@ public class OneFragment extends Fragment{
             builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int id) {
-                    values.clear();
-                    myAdapter.notifyDataSetChanged();
-                    mListener.onFragmentInteraction("Reset2");
+                    //values.clear();
+                    //myAdapter.notifyDataSetChanged();
+                    //mListener.onFragmentInteraction("Reset2");
                 }
             });
             builder.show();
